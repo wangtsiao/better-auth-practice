@@ -9,6 +9,17 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+			container: {
+				center: true,
+				padding: '2rem',
+				screens: {
+					'2xl': '1400px',
+					'xl': '1200px',
+					'lg': '1000px',
+					'md': '800px',
+					'sm': '600px'
+				},
+			},
   		backgroundImage: {
   			'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
   			'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'

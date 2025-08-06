@@ -2,6 +2,7 @@ import ReturnButton from '@/components/return-button';
 import SignOutButton from '@/components/sign-out-button';
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
+import { redirect } from 'next/navigation';
 import React from 'react'
 
 const Profile = async () => {
@@ -10,13 +11,8 @@ const Profile = async () => {
   });
 
   if (!session) {
-    return (
-      <div className='max-w-screen-lg container mx-auto px-8 py-16 space-y-8'>
-        <h1 className='text-3xl font-bold'>You are not logged in</h1>
-      </div>
-    );
+    redirect("/auth/login");
   }
-
 
   return (
     <div className='max-w-screen-lg container mx-auto px-8 py-16 space-y-8'>

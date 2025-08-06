@@ -1,4 +1,4 @@
-import RegisterForm from '@/components/register-form'
+import SignUpForm from '@/components/sign-up-form'
 import ReturnButton from '@/components/return-button'
 import React from 'react'
 
@@ -10,7 +10,7 @@ const page = () => {
         <ReturnButton href='/' label='home'/>
         <h1 className='text-3xl font-bold'>Create an account</h1>
       </div>
-      <RegisterForm />
+      <SignUpForm />
 
     </div>
   )

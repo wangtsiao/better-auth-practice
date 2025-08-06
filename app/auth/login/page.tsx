@@ -1,4 +1,4 @@
-import LoginForm from '@/components/login-form'
+import SignInForm from '@/components/sign-in-form'
 import ReturnButton from '@/components/return-button'
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
@@ -16,7 +16,7 @@ const Login = async () => {
         <ReturnButton href='/' label='home' />
         <h1 className='text-3xl font-bold'>Login</h1>
       </div>
-      <LoginForm />
+      <SignInForm />
 
     </div>
   )

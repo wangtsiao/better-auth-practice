@@ -9,46 +9,35 @@ import { signIn } from '@/lib/auth-client';
 import { useRouter } from 'next/navigation';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
+import { useMutation } from '@tanstack/react-query';
+import { signInEmailAction } from '@/actions/sign-in-email.action';
 
-const LoginForm = () => {
-  const [isPending, setIsPending] = React.useState(false);
+const SignInForm = () => {
   const router = useRouter();
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email') as string;
-    if (!email) {
-      toast.error('Email is required');
-      return;
-    }
-    const password = formData.get('password') as string;
-    if (!password) {
-      toast.error('Password is required');
-      return;
-    }
-
-    await signIn.email({
-      email,
-      password,
-    }, {
-      onRequest: () => {
-        setIsPending(true);
-      },
-      onResponse: () => {
-        setIsPending(false);
-      },
-      onError: (ctx) => {
-        setIsPending(false);
-        toast.error(ctx.error.message);
-      },
-      onSuccess: () => {
+  const mutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return await signInEmailAction(formData);
+    },
+    onSuccess: (data) => {
+      if (data?.error) {
+        toast.error(data.error);
+      } else {
         toast.success('Login successful! Welcome back!');
         router.push('/profile');
-      },
-    })
+      }
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Login failed');
+    },
+  });
+
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    mutation.mutate(formData);
   }
+
 
   return (
     <form onSubmit={handleSubmit} className='max-w-sm w-full space-y-4'>
@@ -64,12 +53,12 @@ const LoginForm = () => {
 
       <div className="text-muted-foreground">Don&apos;t have an account? <Link href="/auth/register" className='hover:text-foreground'>Register</Link></div>
 
-      <Button type='submit' className='w-full' disabled={isPending}>
-        {isPending && <Loader className="w-4 h-4 mr-2 animate-spin" />}{"Login"}
+      <Button type='submit' className='w-full' disabled={mutation.isPending}>
+        {mutation.isPending && <Loader className="w-4 h-4 mr-2 animate-spin" />}{"Login"}
       </Button>
 
     </form>
   )
 }
 
-export default LoginForm;
+export default SignInForm;

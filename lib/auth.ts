@@ -3,6 +3,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from '@/lib/prisma';
 import { hashPassword, verifyPassword } from "@/lib/argon2";
 import { nextCookies } from "better-auth/next-js";
+import { createAuthMiddleware } from "better-auth/api";
+import { authMiddleware } from "@/lib/utils";
 
 
 export const auth = betterAuth({
@@ -25,6 +27,9 @@ export const auth = betterAuth({
   },
   session: {
     expiresIn: 30 * 24 * 60 * 60, // 30 days
+  },
+  hooks: {
+    before: createAuthMiddleware(authMiddleware),
   },
   plugins: [nextCookies()]
 });

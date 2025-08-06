@@ -19,6 +19,7 @@ const SignInForm = () => {
       return await signInEmailAction(formData);
     },
     onSuccess: (data) => {
+      console.log("SignIN: data, ", data);
       if (data?.error) {
         toast.error(data.error);
       } else {

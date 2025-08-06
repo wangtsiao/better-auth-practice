@@ -1,6 +1,7 @@
 "use server"
 
-import { auth } from "@/lib/auth";
+import { auth, ErrCode } from "@/lib/auth";
+import { APIError } from "better-auth/api";
 
 export async function signUpEmailAction(formData: FormData) {
   const name = formData.get('name') as string;
@@ -20,10 +21,16 @@ export async function signUpEmailAction(formData: FormData) {
         password,
       }
     });
-    return {error: null};
+    return { error: null };
   } catch (err) {
-    if (err instanceof Error) {
-      return {error: "Oops! Something went wrong. Please try again later."};
+    if (err instanceof APIError) {
+      const errCode = err.body ? (err.body.code as ErrCode) : "UNKNOWN";
+      switch (errCode) {
+        default:
+          return { error: err.message }
+      }
     }
+
+    return { error: "Oops! Something went wrong. Please try again later." };
   }
 }

@@ -1,7 +1,7 @@
 import RegisterForm from '@/components/register-form'
 import ReturnButton from '@/components/return-button'
-import Link from 'next/link'
 import React from 'react'
+
 
 const page = () => {
   return (

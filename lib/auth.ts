@@ -1,10 +1,13 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
+import { admin } from "better-auth/plugins";
 import { prisma } from '@/lib/prisma';
 import { hashPassword, verifyPassword } from "@/lib/argon2";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware } from "better-auth/api";
 import { authMiddleware } from "@/lib/utils";
+import { UserRole } from "@/lib/generated/prisma";
+import { ac, roles } from "@/lib/permission";
 
 
 export const auth = betterAuth({
@@ -38,7 +41,7 @@ export const auth = betterAuth({
           const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(";") ?? [];
 
           if (ADMIN_EMAILS.includes(user.email)) {
-            return { data: { ...user, role: "ADMIN" } };
+            return { data: { ...user, role: UserRole.ADMIN } };
           }
 
           return { data: user };
@@ -46,11 +49,19 @@ export const auth = betterAuth({
       }
     }
   },
-  plugins: [nextCookies()],
+  plugins: [
+    nextCookies(),
+    admin({
+      defaultRole: UserRole.USER,
+      adminRoles: [UserRole.ADMIN],
+      ac,
+      roles,
+    })
+  ],
   user: {
     additionalFields: {
       role: {
-        type: ["USER", "ADMIN"],
+        type: ["USER", "ADMIN"] as Array<UserRole>,
         input: false,
       }
     }

@@ -5,11 +5,14 @@ import { headers } from 'next/headers'
 import React from 'react'
 import { prisma } from '@/lib/prisma'
 import { DeleteUserButton, PlaceholderDeleteUserButton } from '@/components/delete-user-button'
+import { UserRoleSelect } from '@/components/user-role-select'
+import { UserRole } from '@/lib/generated/prisma'
 
 
 const Page = async () => {
+    const headersList = await headers();
     const session = await auth.api.getSession({
-        headers: await headers(),
+        headers: headersList,
     });
 
     if (!session) redirect("/auth/login");
@@ -26,10 +29,17 @@ const Page = async () => {
         )
     }
 
-    const users = await prisma.user.findMany({
-        orderBy: {
-            name: "asc"
-        }
+    const { users } = await auth.api.listUsers({
+        headers: headersList,
+        query: {
+            sortBy: "name",
+        },
+    });
+
+    const sortedUsers = users.sort((a, b) => {
+        if (a.role === "ADMIN" && b.role !== "ADMIN") return -1;
+        if (a.role !== "ADMIN" && b.role === "ADMIN") return 1;
+        return 0;
     });
 
     return (
@@ -52,12 +62,14 @@ const Page = async () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {users.map((user) => (
+                        {sortedUsers.map((user) => (
                             <tr className="boder-b text-sm text-left" key={user.id}>
                                 <td className="px-2 py-2">{user.id.slice(0, 8)}</td>
                                 <td className="px-2 py-2">{user.name}</td>
                                 <td className="px-2 py-2">{user.email}</td>
-                                <td className="px-2 py-2 text-center">{user.role}</td>
+                                <td className="px-2 py-2 text-center">
+                                    <UserRoleSelect userId={user.id} role={user.role as UserRole} />
+                                </td>
                                 <td className="px-2 py-2 text-center">
                                     {
                                         user.role === "USER" ?

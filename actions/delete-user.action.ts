@@ -19,7 +19,16 @@ export async function DeleteUserAction({ userId }: { userId: string }) {
 
     if (!session) return { error: "you are not sign in" }
 
-    if (session.user.role !== "ADMIN") return { error: "you are not authorized" }
+    const hasPermission = await auth.api.userHasPermission({
+        body: {
+            userId: session.user.id,
+            permissions: {
+                user: ["delete"]
+            }
+        }
+    });
+
+    if (!hasPermission.success) return { error: "you are not authorized" }
 
     try {
         await prisma.user.delete({

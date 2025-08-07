@@ -33,7 +33,7 @@ export function DeleteUserButton({ userId }: DeleteUserButtonProp) {
     }
 
     return (
-        <Button size={"icon"} variant={"destructive"} onClick={handleClick} disabled={mutation.isPending}>
+        <Button size={"icon"} variant={"destructive"} onClick={handleClick} disabled={mutation.isPending} className="size-7 rounded-sm">
             <span className="sr-only">Delete User</span>
             <Trash2Icon />
         </Button>

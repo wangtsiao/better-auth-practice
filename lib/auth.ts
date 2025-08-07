@@ -23,6 +23,7 @@ export const auth = betterAuth({
       verify: verifyPassword,
     }
   },
+  trustedOrigins:  ["localhost:3000", "symmetrical-space-disco-vw746vv46g42697j-3000.app.github.dev"],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,

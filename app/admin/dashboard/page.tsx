@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { headers } from 'next/headers'
 import React from 'react'
 import { prisma } from '@/lib/prisma'
+import { DeleteUserButton, PlaceholderDeleteUserButton } from '@/components/delete-user-button'
 
 
 const Page = async () => {
@@ -40,28 +41,34 @@ const Page = async () => {
             <p className='rounded-md p-2 text-lg bg-green-500 font-semibold text-secondary'>Acess Granted</p>
 
             <div className="w-full overflow-x-auto">
-            <table className="table-auto min-w-full whitespace-nowrap">
-                <thead>
-                    <tr className="border-b text-sm text-left">
-                        <th className='px-2 py-2'>ID</th>
-                        <th className='px-2 py-2'>Name</th>
-                        <th className='px-2 py-2'>Email</th>
-                        <th className='px-2 py-2 text-center'>Role</th>
-                        <th className='px-2 py-2 text-center'>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user) => (
-                        <tr className="boder-b text-sm text-left" key={user.id}>
-                            <td className="px-2 py-2">{user.id.slice(0, 8)}</td>
-                            <td className="px-2 py-2">{user.name}</td>
-                            <td className="px-2 py-2">{user.email}</td>
-                            <td className="px-2 py-2 text-center">{user.role}</td>
-                            <td className="px-2 py-2 text-center">Delete</td>
+                <table className="table-auto min-w-full whitespace-nowrap">
+                    <thead>
+                        <tr className="border-b text-sm text-left">
+                            <th className='px-2 py-2'>ID</th>
+                            <th className='px-2 py-2'>Name</th>
+                            <th className='px-2 py-2'>Email</th>
+                            <th className='px-2 py-2 text-center'>Role</th>
+                            <th className='px-2 py-2 text-center'>Action</th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {users.map((user) => (
+                            <tr className="boder-b text-sm text-left" key={user.id}>
+                                <td className="px-2 py-2">{user.id.slice(0, 8)}</td>
+                                <td className="px-2 py-2">{user.name}</td>
+                                <td className="px-2 py-2">{user.email}</td>
+                                <td className="px-2 py-2 text-center">{user.role}</td>
+                                <td className="px-2 py-2 text-center">
+                                    {
+                                        user.role === "USER" ?
+                                            <DeleteUserButton userId={user.id} />
+                                            : <PlaceholderDeleteUserButton />
+                                    }
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </div>
     )

@@ -5,7 +5,6 @@ import { hashPassword, verifyPassword } from "@/lib/argon2";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware } from "better-auth/api";
 import { authMiddleware } from "@/lib/utils";
-import { UserRole } from "@/lib/generated/prisma";
 
 
 export const auth = betterAuth({
@@ -31,6 +30,21 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(authMiddleware),
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(";") ?? [];
+
+          if (ADMIN_EMAILS.includes(user.email)) {
+            return { data: { ...user, role: "ADMIN" } };
+          }
+
+          return { data: user };
+        }
+      }
+    }
   },
   plugins: [nextCookies()],
   user: {

@@ -5,6 +5,7 @@ import { hashPassword, verifyPassword } from "@/lib/argon2";
 import { nextCookies } from "better-auth/next-js";
 import { createAuthMiddleware } from "better-auth/api";
 import { authMiddleware } from "@/lib/utils";
+import { UserRole } from "@/lib/generated/prisma";
 
 
 export const auth = betterAuth({
@@ -31,7 +32,15 @@ export const auth = betterAuth({
   hooks: {
     before: createAuthMiddleware(authMiddleware),
   },
-  plugins: [nextCookies()]
+  plugins: [nextCookies()],
+  user: {
+    additionalFields: {
+      role: {
+        type: ["USER", "ADMIN"],
+        input: false,
+      }
+    }
+  }
 });
 
 export type ErrCode = keyof typeof auth.$ERROR_CODES | "UNKNOWN";

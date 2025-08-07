@@ -18,7 +18,12 @@ const GetStartedButton = () => {
       <Button size='lg' asChild>
         <Link href={href}>Get Started</Link>
       </Button>
-      {session && <p className='text-base'>Welcome back, {session.user.name} 👋😊!</p>}
+      {session &&
+        <p className='flex items-center gap-2'>
+          <span data-role={session.user.role} className='size-4 rounded-full animate-pulse data-[role=USER]:bg-green-500 data-[role=ADMIN]:bg-red-500' />
+          Welcome back, {session.user.name} 👋😊!
+        </p>
+      }
     </>
   )
 }

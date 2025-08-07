@@ -8,6 +8,7 @@ import { createAuthMiddleware } from "better-auth/api";
 import { authMiddleware } from "@/lib/utils";
 import { UserRole } from "@/lib/generated/prisma";
 import { ac, roles } from "@/lib/permission";
+import { sendEmailAction } from "@/actions/send-email.actoin";
 
 
 export const auth = betterAuth({
@@ -21,9 +22,25 @@ export const auth = betterAuth({
     password: {
       hash: hashPassword,
       verify: verifyPassword,
+    },
+    requireEmailVerification: true,
+  },
+  emailVerification: {
+    sendOnSignUp: true,
+    expiresIn: 60 * 60, // 1 hours
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmailAction({
+        to: user.email,
+        subject: "Verify your email",
+        meta: {
+          description: "Please verify your email address.",
+          link: url,
+        }
+      })
     }
   },
-  trustedOrigins:  ["localhost:3000", "symmetrical-space-disco-vw746vv46g42697j-3000.app.github.dev"],
+  trustedOrigins:  ["http://localhost:3000", "symmetrical-space-disco-vw746vv46g42697j-3000.app.github.dev"],
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,

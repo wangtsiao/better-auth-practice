@@ -10,6 +10,7 @@ import { useMutation } from '@tanstack/react-query';
 import { Loader } from 'lucide-react';
 import Link from 'next/link';
 import { signUpEmailAction } from '@/actions/sign-up-email.action';
+import { SignOauthButton } from '@/components/sign-oauth-button';
 
 
 const SignUpForm = () => {
@@ -39,28 +40,37 @@ const SignUpForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='max-w-sm w-full space-y-4'>
-      <div className="space-y-2">
-        <Label htmlFor='name'>Name</Label>
-        <Input id='name' name='name' />
+    <>
+      <form onSubmit={handleSubmit} className='max-w-sm w-full space-y-4'>
+        <div className="space-y-2">
+          <Label htmlFor='name'>Name</Label>
+          <Input id='name' name='name' />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor='email'>Email</Label>
+          <Input id='email' name='email' type='email' />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor='password'>Password</Label>
+          <Input id='password' name='password' type='password' />
+        </div>
+
+        <div className="text-muted-foreground">Already have an account? <Link href="/auth/login" className='hover:text-foreground'>Login</Link></div>
+
+        <Button type='submit' className='w-full' disabled={mutation.isPending}>
+          {mutation.isPending && <Loader className="w-4 h-4 mr-2 animate-spin" />}Register
+        </Button>
+      </form>
+
+      <hr className="max-w-sm" />
+
+      <div className="flex flex-col max-w-sm gap-4">
+        <SignOauthButton provider="google" signUp />
+        <SignOauthButton provider="github" signUp />
       </div>
-
-      <div className="space-y-2">
-        <Label htmlFor='email'>Email</Label>
-        <Input id='email' name='email' type='email' />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor='password'>Password</Label>
-        <Input id='password' name='password' type='password' />
-      </div>
-
-      <div className="text-muted-foreground">Already have an account? <Link href="/auth/login" className='hover:text-foreground'>Login</Link></div>
-
-      <Button type='submit' className='w-full' disabled={mutation.isPending}>
-        {mutation.isPending && <Loader className="w-4 h-4 mr-2 animate-spin" />}Register
-      </Button>
-    </form>
+    </>
   )
 }
 

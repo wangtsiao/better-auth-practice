@@ -37,7 +37,7 @@ export const auth = betterAuth({
           description: "Please verify your email address.",
           link: url,
         }
-      })
+      });
     }
   },
   trustedOrigins:  ["http://localhost:3000", "symmetrical-space-disco-vw746vv46g42697j-3000.app.github.dev"],

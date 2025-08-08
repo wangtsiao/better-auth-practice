@@ -28,21 +28,21 @@ export const auth = betterAuth({
       hash: hashPassword,
       verify: verifyPassword,
     },
-    requireEmailVerification: true,
+    requireEmailVerification: false,
   },
   emailVerification: {
     sendOnSignUp: true,
     expiresIn: 60 * 60, // 1 hours
     autoSignInAfterVerification: true,
     sendVerificationEmail: async ({ user, url }) => {
-      await sendEmailAction({
-        to: user.email,
-        subject: "Verify your email",
-        meta: {
-          description: "Please verify your email address.",
-          link: url,
-        }
-      });
+      // await sendEmailAction({
+      //   to: user.email,
+      //   subject: "Verify your email",
+      //   meta: {
+      //     description: "Please verify your email address.",
+      //     link: url,
+      //   }
+      // });
     }
   },
   trustedOrigins:  ["http://localhost:3000", "symmetrical-space-disco-vw746vv46g42697j-3000.app.github.dev"],
@@ -78,7 +78,9 @@ export const auth = betterAuth({
           }
 
           return { data: user };
-        }
+        },
+        after: async (user, context) => {
+        },
       }
     }
   },

@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { ProgressProvider } from '@bprogress/next/app'
+
 import { QueryClientProviderWrapper } from '@/components/providers/query-client-provider'
+import { ProgressProviderWrapper } from "@/components/providers/bprogress-provider";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -21,9 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ProgressProvider height="3px" color="#22c55e" options={{ showSpinner: false }}>
+        <ProgressProviderWrapper>
           <QueryClientProviderWrapper>{children}</QueryClientProviderWrapper>
-        </ProgressProvider>
+        </ProgressProviderWrapper>
         <Toaster position="top-center" richColors />
       </body>
     </html>

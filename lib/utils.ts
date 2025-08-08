@@ -47,20 +47,4 @@ export async function authMiddleware(ctx: MiddlewareContext<MiddlewareOptions, A
       context: { ...ctx, body: { ...ctx.body, name } },
     };
   }
-
-  if (ctx.path === "/sign-in/magic-link") {
-    const name = normalizeName(ctx.body.name);
-
-    return {
-      context: { ...ctx, body: { ...ctx.body, name } },
-    };
-  }
-
-  if (ctx.path === "/update-user") {
-    const name = normalizeName(ctx.body.name);
-
-    return {
-      context: { ...ctx, body: { ...ctx.body, name } },
-    };
-  }
 }

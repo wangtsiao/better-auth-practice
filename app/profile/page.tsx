@@ -1,6 +1,7 @@
+import OrganizationTable from '@/components/organization-table';
 import ReturnButton from '@/components/return-button';
 import SignOutButton from '@/components/sign-out-button';
-import {Button} from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/auth'
 import { headers } from 'next/headers'
 import Link from 'next/link';
@@ -29,7 +30,7 @@ const Profile = async () => {
     <div className='max-w-screen-lg container mx-auto px-8 py-16 space-y-8'>
 
       <div className="space-y-8">
-        <ReturnButton href='/' label='home'/>
+        <ReturnButton href='/' label='home' />
         <h1 className='text-3xl font-bold'>Profile</h1>
       </div>
       <div className="flex gap-2 items-center">
@@ -41,6 +42,8 @@ const Profile = async () => {
         <SignOutButton />
       </div>
 
+      <OrganizationTable />
+
       <h2 className="text-2xl font-bold">Permissions</h2>
 
       <div className="space-x-4">
@@ -49,7 +52,7 @@ const Profile = async () => {
           MANAGE ALL POSTS
         </Button>
       </div>
-      
+
       <pre className='text-sm overflow-clip'>
         {JSON.stringify(session, null, 2)}
       </pre>

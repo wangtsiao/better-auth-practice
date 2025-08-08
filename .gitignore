@@ -35,8 +35,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-pgdata/
-pgdata/**/**
+/volume
 
 lib/generated/
 lib/generated/**/**

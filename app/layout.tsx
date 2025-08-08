@@ -23,7 +23,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ProgressProviderWrapper>
-          <QueryClientProviderWrapper>{children}</QueryClientProviderWrapper>
+          <QueryClientProviderWrapper>
+            {children}
+          </QueryClientProviderWrapper>
         </ProgressProviderWrapper>
         <Toaster position="top-center" richColors />
       </body>

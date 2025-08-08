@@ -1,6 +1,7 @@
 "use server"
 
 import { auth } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 
 export async function createOrganization(formData: FormData) {
@@ -8,16 +9,21 @@ export async function createOrganization(formData: FormData) {
     const slug = formData.get('slug') as string;
 
     try {
-        
-    await auth.api.createOrganization({
-        body: {
-            name,
-            slug,
-        },
-        headers: await headers(),
-    });
-        return {error: null}
+        await auth.api.createOrganization({
+            body: {
+                name,
+                slug,
+            },
+            headers: await headers(),
+        });
+
+        revalidatePath("/profile");
+        return { error: null }
     } catch (err) {
-        return {error: err}
+        if (err instanceof Error) {
+            console.log("err: ", err.message);
+            return { error: "Oops, something went wrong." }
+        }
+        return { error: "Server Internal Error" }
     }
 }

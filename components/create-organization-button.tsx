@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, { useState } from 'react'
 
 import {
     Dialog,
@@ -19,7 +19,14 @@ import { useMutation } from '@tanstack/react-query'
 import { createOrganization } from '@/actions/create-organization.action'
 import { toast } from 'sonner'
 
-function CreateOrganizationButton() {
+
+interface CreateOrganizationButtonProps {
+    refetch: () => void;
+}
+
+function CreateOrganizationButton({ refetch }: CreateOrganizationButtonProps) {
+    const [open, setOpen] = useState(false);
+
     const mutation = useMutation({
         mutationFn: async (formData: FormData) => {
             return await createOrganization(formData);
@@ -27,7 +34,10 @@ function CreateOrganizationButton() {
         onSuccess: (res) => {
             if (!res.error) {
                 toast.success("Organization created successfully!");
+                setOpen(false);
+                refetch();
             } else {
+                console.log(res.error);
                 toast.error(res.error as string);
             }
         },
@@ -37,23 +47,23 @@ function CreateOrganizationButton() {
     })
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        console.log("submit create org");
         const formData = new FormData(event.currentTarget);
         mutation.mutate(formData);
+        
     }
     return (
-        <Dialog>
-            <form onSubmit={handleSubmit}>
-                <DialogTrigger asChild>
-                    <Button>Create Organization</Button>
-                </DialogTrigger>
-                <DialogContent className='max-w-sm'>
-                    <DialogHeader>
-                        <DialogTitle>Create Organization</DialogTitle>
-                        <DialogDescription>
-                            Create a new organization.
-                        </DialogDescription>
-                    </DialogHeader>
+        <Dialog open={open} onOpenChange={setOpen}>
+            <DialogTrigger asChild>
+                <Button>Create Organization</Button>
+            </DialogTrigger>
+            <DialogContent className='max-w-sm'>
+                <DialogHeader>
+                    <DialogTitle>Create Organization</DialogTitle>
+                    <DialogDescription>
+                        Create a new organization.
+                    </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className='space-y-4'>
                     <div className="grid gap-4">
                         <div className="grid gap-3">
                             <Label htmlFor="name">Name</Label>
@@ -70,8 +80,8 @@ function CreateOrganizationButton() {
                         </DialogClose>
                         <Button type="submit" disabled={mutation.isPending}>Confirm</Button>
                     </DialogFooter>
-                </DialogContent>
-            </form>
+                </form>
+            </DialogContent>
         </Dialog>
     )
 }
